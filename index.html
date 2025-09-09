@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Snap it — Grocery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .logo-font { font-family: 'Pacifico', cursive; }
+    .body-font { font-family: 'Poppins', sans-serif; }
+    /* small nice scroll for cart */
+    #cart { scrollbar-width: thin; }
+  </style>
+</head>
+<body class="bg-gray-50 body-font min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="bg-green-600 text-white px-6 py-4 flex items-center justify-between shadow">
+    <div class="flex items-center gap-4">
+      <h1 class="text-3xl logo-font">Snap it</h1>
+      <span class="italic">Need It! Snap it!</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="#products" class="hidden md:inline font-semibold hover:opacity-90">Products</a>
+      <a href="#brands" class="hidden md:inline font-semibold hover:opacity-90">Brands</a>
+      <button onclick="toggleCart()" class="bg-white text-green-600 px-4 py-1 rounded-full font-semibold">🛒 Cart (<span id="cart-count">0</span>)</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="bg-gradient-to-r from-green-100 to-white text-center py-12">
+    <h2 class="text-5xl logo-font text-green-700">Snap it</h2>
+    <p class="mt-2 text-lg text-gray-700">Need It! Snap it! — Fresh groceries, quick delivery.</p>
+    <div class="mt-6">
+      <a href="#products" class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700">Shop Now</a>
+    </div>
+  </header>
+
+  <!-- LAYOUT -->
+  <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- LEFT: content -->
+    <section class="lg:col-span-2 space-y-8">
+      <!-- Categories -->
+      <div id="categories" class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-2xl font-bold mb-4">Shop by Category</h3>
+        <div class="grid grid-cols-3 md:grid-cols-6 gap-4 text-center">
+          <div class="p-4 bg-green-100 rounded-lg cursor-pointer">Vegetables</div>
+          <div class="p-4 bg-yellow-100 rounded-lg cursor-pointer">Fruits</div>
+          <div class="p-4 bg-blue-100 rounded-lg cursor-pointer">Dairy</div>
+          <div class="p-4 bg-red-100 rounded-lg cursor-pointer">Snacks</div>
+          <div class="p-4 bg-purple-100 rounded-lg cursor-pointer">Beverages</div>
+          <div class="p-4 bg-pink-100 rounded-lg cursor-pointer">Personal Care</div>
+        </div>
+      </div>
+
+      <!-- Brands -->
+      <div id="brands" class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-2xl font-bold mb-4">Top Brands</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div class="p-3 bg-white rounded-lg shadow text-center">
+            <img src="https://upload.wikimedia.org/wikipedia/en/8/8a/Haldiram%27s_logo.png" class="mx-auto h-12 mb-2" alt="Haldiram">
+            <div class="font-semibold">Haldiram’s</div>
+          </div>
+          <div class="p-3 bg-white rounded-lg shadow text-center">
+            <img src="https://5.imimg.com/data5/SELLER/Default/2022/10/JF/WZ/VJ/1746876/mdh-spices.jpg" class="mx-auto h-12 mb-2" alt="MDH">
+            <div class="font-semibold">MDH</div>
+          </div>
+          <div class="p-3 bg-white rounded-lg shadow text-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Amul_official_logo.png" class="mx-auto h-12 mb-2" alt="Amul">
+            <div class="font-semibold">Amul</div>
+          </div>
+          <div class="p-3 bg-white rounded-lg shadow text-center">
+            <img src="https://www.patanjaliayurved.net/assets/images/logo.png" class="mx-auto h-12 mb-2" alt="Patanjali">
+            <div class="font-semibold">Patanjali</div>
+          </div>
+          <div class="p-3 bg-white rounded-lg shadow text-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Nestle_textlogo.svg" class="mx-auto h-12 mb-2" alt="Nestle">
+            <div class="font-semibold">Nestlé</div>
+          </div>
+          <div class="p-3 bg-white rounded-lg shadow text-center">
+            <img src="https://seeklogo.com/images/F/fortune-edible-oils-logo-1D827B41D9-seeklogo.com.png" class="mx-auto h-12 mb-2" alt="Fortune">
+            <div class="font-semibold">Fortune</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products -->
+      <div id="products" class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-2xl font-bold mb-4">Popular Products</h3>
+        <div id="products-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          <!-- JS will render product cards here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: cart sidebar (hidden by default, slides in) -->
+    <aside id="cart" class="fixed right-0 top-0 w-96 h-full bg-white shadow-lg p-6 transform translate-x-full transition-transform z-50 overflow-auto">
+      <div class="flex justify-between items-center">
+        <h3 class="text-xl font-bold">🛒 Your Cart</h3>
+        <button onclick="toggleCart()" class="text-gray-500">✖</button>
+      </div>
+
+      <div id="cart-body" class="mt-4 space-y-3">
+        <ul id="cart-items" class="space-y-2"></ul>
+        <div id="empty-msg" class="text-gray-500">Cart is empty. Add items to cart.</div>
+      </div>
+
+      <div class="mt-4 border-t pt-4">
+        <div class="flex justify-between font-bold">
+          <span>Total:</span>
+          <span id="cart-total">₹0</span>
+        </div>
+
+        <div class="mt-4 space-y-2">
+          <button onclick="checkout()" class="w-full bg-green-600 text-white py-2 rounded-lg font-semibold">Checkout</button>
+          <button onclick="saveCartLocally()" class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg">Save Cart (Local)</button>
+        </div>
+      </div>
+
+      <div class="mt-6 text-sm text-gray-500">
+        <div>Local orders stored in browser. For real orders, connect Google Form (see README).</div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- THANK YOU / SUMMARY overlay (hidden) -->
+  <div id="thankyou" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-60">
+    <div class="bg-white rounded-lg p-6 w-11/12 max-w-lg text-center">
+      <h3 class="text-2xl font-bold mb-2">🎉 Order Placed!</h3>
+      <p id="thank-items" class="text-gray-700 mb-3"></p>
+      <p id="thank-total" class="font-semibold mb-4"></p>
+      <button onclick="closeThankyou()" class="bg-green-600 text-white px-4 py-2 rounded-full">Close</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-800 text-white text-center py-6 mt-10">
+    <p>© 2025 Snap It Grocery Store. All Rights Reserved.</p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    /* ========== CONFIG ========== */
+    // Replace with your Google Form action (if using Google Form)
+    // Example: "https://docs.google.com/forms/d/e/FORM_ID/formResponse"
+    const FORM_ACTION = ""; // <-- paste your form action URL here (or leave empty to use local only)
+
+    // If you use Google Form, replace these entry IDs with your form's entry.* names
+    const FORM_ENTRY_NAME   = "entry.1111111111"; // name field
+    const FORM_ENTRY_PHONE  = "entry.2222222222"; // phone field
+    const FORM_ENTRY_ADDR   = "entry.3333333333"; // address field
+    const FORM_ENTRY_ITEMS  = "entry.4444444444"; // items detail
+    const FORM_ENTRY_TOTAL  = "entry.5555555555"; // total price
+
+    /* ========== SAMPLE PRODUCTS ========== */
+    const PRODUCTS = [
+      { id: 1, name: "Onion", price: 40, unit: "kg", img: "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_onion.jpg" },
+      { id: 2, name: "Carrot", price: 60, unit: "kg", img: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Carrots.jpg" },
+      { id: 3, name: "Apple", price: 120, unit: "kg", img: "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg" },
+      { id: 4, name: "Banana", price: 50, unit: "dozen", img: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Banana_2011.jpg" },
+      { id: 5, name: "Amul Milk", price: 30, unit: "litre", img: "https://5.imimg.com/data5/SELLER/Default/2021/1/WD/QW/XT/125522828/amul-milk.jpg" },
+      { id: 6, name: "Haldiram Aloo Bhujia", price: 99, unit: "pc", img: "https://www.jiomart.com/images/product/original/490008135/haldiram-namkeen-aloo-bhujia-1-kg-product-images-o490008135-p590018393-0-202203170404.jpg" }
+    ];
+
+    /* ========== STATE ========== */
+    let cart = JSON.parse(localStorage.getItem('snapit_cart') || "[]");
+
+    /* ========== RENDER PRODUCTS ========== */
+    function renderProducts() {
+      const grid = document.getElementById("products-grid");
+      grid.innerHTML = "";
+      PRODUCTS.forEach(p => {
+        grid.innerHTML += `
+          <div class="bg-white p-4 rounded-xl shadow text-center">
+            <img src="${p.img}" class="mx-auto h-24 mb-2 rounded" alt="${p.name}">
+            <p class="font-semibold">${p.name}</p>
+            <p class="text-green-600">₹${p.price}/${p.unit}</p>
+            <div class="mt-2 flex items-center justify-center gap-2">
+              <input id="qty-${p.id}" type="number" min="1" value="1" class="w-20 border rounded px-2 py-1 text-center" />
+              <button onclick="addToCart(${p.id})" class="bg-green-600 text-white px-3 py-1 rounded-full">Add</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    /* ========== CART FUNCTIONS ========== */
+    function addToCart(productId) {
+      const p = PRODUCTS.find(x => x.id === productId);
+      const qtyEl = document.getElementById(`qty-${productId}`);
+      const qty = Math.max(1, parseInt(qtyEl.value || "1"));
+      cart.push({ id: p.id, name: p.name, price: p.price, qty });
+      saveCart();
+      renderCart();
+      openCart();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index,1);
+      saveCart();
+      renderCart();
+    }
+
+    function changeQty(index, newQty) {
+      cart[index].qty = Math.max(1, parseInt(newQty || 1));
+      saveCart();
+      renderCart();
+    }
+
+    function saveCart() {
+      localStorage.setItem('snapit_cart', JSON.stringify(cart));
+      document.getElementById('cart-count').innerText = cart.reduce((s,i)=>s+i.qty,0);
+    }
+
+    function saveCartLocally() {
+      saveCart();
+      alert("Cart saved locally 👍");
+    }
+
+    function renderCart() {
+      const list = document.getElementById("cart-items");
+      const emptyMsg = document.getElementById("empty-msg");
+      list.innerHTML = "";
+      if (cart.length === 0) {
+        emptyMsg.style.display = "block";
+      } else {
+        emptyMsg.style.display = "none";
+        cart.forEach((it, idx) => {
+          const subtotal = it.price * it.qty;
+          list.innerHTML += `
+            <li class="flex justify-between items-center">
+              <div class="text-left">
+                <div class="font-semibold">${it.name}</div>
+                <div class="text-sm text-gray-500">₹${it.price} x 
+                  <input onchange="changeQty(${idx}, this.value)" value="${it.qty}" type="number" min="1" class="w-14 inline-block border rounded px-1 text-sm" />
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-semibold">₹${subtotal}</div>
+                <button onclick="removeFromCart(${idx})" class="text-red-500 text-sm mt-1">Remove</button>
+              </div>
+            </li>
+          `;
+        });
+      }
+      const total = cart.reduce((s,i)=>s + i.price * i.qty, 0);
+      document.getElementById('cart-total').innerText = "₹" + total;
+      document.getElementById('cart-count').innerText = cart.reduce((s,i)=>s+i.qty,0);
+    }
+
+    /* ========== CART UI ========== */
+    function toggleCart(forceClose=false) {
+      const el = document.getElementById('cart');
+      if (forceClose) {
+        el.classList.add('translate-x-full');
+      } else {
+        el.classList.toggle('translate-x-full');
+      }
+    }
+    function openCart() { document.getElementById('cart').classList.remove('translate-x-full'); }
+
+    /* ========== CHECKOUT + PLACE ORDER ========== */
+    function checkout() {
+      if (cart.length === 0) { alert("🛒 Your cart is empty!"); return; }
+
+      // Ask for buyer details
+      const name = prompt("Enter your name:");
+      if (!name) { alert("Name required."); return; }
+      const phone = prompt("Phone number:");
+      if (!phone) { alert("Phone required."); return; }
+      const address = prompt("Delivery address:");
+      if (!address) { alert("Address required."); return; }
+
+      // Build order summary
+      const itemsText = cart.map(i => `${i.name} (x${i.qty}) - ₹${i.price * i.qty}`).join("; ");
+      const total = cart.reduce((s,i)=>s + i.price * i.qty, 0);
+
+      // If FORM_ACTION provided, submit to Google Form
+      if (FORM_ACTION && FORM_ACTION.trim() !== "") {
+        const data = new FormData();
+        data.append(FORM_ENTRY_NAME, name);
+        data.append(FORM_ENTRY_PHONE, phone);
+        data.append(FORM_ENTRY_ADDR, address);
+        data.append(FORM_ENTRY_ITEMS, itemsText);
+        data.append(FORM_ENTRY_TOTAL, total);
+
+        // send (no-cors mode: browser won't return response)
+        fetch(FORM_ACTION, { method: "POST", body: data, mode: "no-cors" })
+          .then(()=> {
+            afterOrderPlaced(name, itemsText, total, true);
+          })
+          .catch(()=> {
+            // still show success locally
+            afterOrderPlaced(name, itemsText, total, false);
+          });
+
+      } else {
+        // No form connected -> save to localStorage as "orders"
+        const orders = JSON.parse(localStorage.getItem('snapit_orders') || "[]");
+        orders.push({ name, phone, address, items: itemsText, total, created: Date.now() });
+        localStorage.setItem('snapit_orders', JSON.stringify(orders));
+        afterOrderPlaced(name, itemsText, total, false);
+      }
+    }
+
+    function afterOrderPlaced(name, itemsText, total, sentToGoogle) {
+      // show thank you
+      document.getElementById('thank-items').innerText = `Hi ${name}, you ordered: ${itemsText}`;
+      document.getElementById('thank-total').innerText = `Total: ₹${total}` + (sentToGoogle ? " (sent to Google Sheet)" : " (saved locally)");
+      document.getElementById('thankyou').classList.remove('hidden');
+
+      // reset cart
+      cart = [];
+      saveCart();
+      renderCart();
+      toggleCart(true);
+    }
+
+    function closeThankyou(){
+      document.getElementById('thankyou').classList.add('hidden');
+    }
+
+    /* ========== INIT ========== */
+    renderProducts();
+    renderCart();
+    saveCart();
+  </script>
+
+  <!-- ======= USAGE NOTES =======
+    1) To connect Google Form:
+       - Make a Form with fields: Name, Phone, Address, Items, Total
+       - Open the form in browser, right click Inspect on the input -> find "name" like entry.123456789
+       - Set FORM_ACTION to form's action URL, and set FORM_ENTRY_* to the corresponding entry.* names above.
+       - Example:
+          const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLS.../formResponse";
+          const FORM_ENTRY_NAME = "entry.123456789";
+    2) If FORM_ACTION left empty, orders are saved to localStorage under 'snapit_orders'.
+    3) This is frontend-only approach (no real payment). Good for demo / MVP.
+  ============================ -->
+
+</body>
+</html>
